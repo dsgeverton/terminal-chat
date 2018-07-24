@@ -6,7 +6,6 @@ ipServer=""
 serverPort="35777" # If not set, starting with default value
 nickname="anonymous"
 
-
 run () {
   printf "Starting server... "
   sleep 3 && printf "OK!\n" && sleep 1
@@ -16,7 +15,12 @@ run () {
   echo ""
   echo " - Press 'Ctrl + C' to exit."
   echo ""
-  mawk -W interactive '$0="'${nickname}': " $0' | nc -l -p ${serverPort} ${ipServer}
+
+  if [[ $1 -eq 0 ]]; then
+    mawk -W interactive '$0="'${nickname}': " $0' | nc -l -p ${serverPort} ${ipServer}
+  else
+    mawk -W interactive '$0="'${nickname}': " $0' | nc ${ipServer} ${serverPort}
+  fi
 }
 
 menu () {
@@ -57,11 +61,17 @@ menu () {
 
         echo "Entry your nickname: "
         read nickname
-        run
+        run "0"
 
   echo "================================================"
   ;;
       2)
+        echo "Entry server IP address: "
+        read ipServer
+
+        echo "Entry your nickname: "
+        read nickname
+        run "1"
 
   echo "================================================"
   ;;
